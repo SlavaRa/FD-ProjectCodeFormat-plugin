@@ -1,6 +1,5 @@
 ﻿using PluginCore;
 using PluginCore.Helpers;
-using PluginCore.Managers;
 using PluginCore.Utilities;
 using System.ComponentModel;
 using System.IO;
@@ -11,7 +10,7 @@ namespace ADProjectSettingsManager
     {
         private string name = "ADProjectSettingsManager";
         private string guid = "463e5424-175d-4452-8583-94b1edd7ae76";
-        private string desc = "";//TODO: implement me
+        private string desc = "";//TODO slavara: implement me
         private string help = "www.flashdevelop.org/community/";
         private string auth = "FlashDevelop Team";
         private string settingFilename;

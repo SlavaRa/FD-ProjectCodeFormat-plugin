@@ -2,6 +2,7 @@
 using PluginCore;
 using PluginCore.Helpers;
 using PluginCore.Utilities;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
@@ -118,7 +119,12 @@ namespace ADProjectSettingsManager
         {
             settings = new Settings();
             if (!File.Exists(settingFilename)) SaveSettings();
-            else settings = (Settings)ObjectSerializer.Deserialize(settingFilename, settings); ;
+            else settings = (Settings)ObjectSerializer.Deserialize(settingFilename, settings);
+            if (settings.Projects == null)
+            {
+                settings.Projects = new List<string>();
+                SaveSettings();
+            }
         }
 
         private void CreateMenuItems()

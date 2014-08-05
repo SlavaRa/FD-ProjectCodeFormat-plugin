@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace ADProjectSettingsManager.Controls
 {
@@ -8,9 +9,24 @@ namespace ADProjectSettingsManager.Controls
 
         public PluginUI(PluginMain pluginMain)
         {
-            // TODO: Complete member initialization
             this.pluginMain = pluginMain;
             InitializeComponent();
+            RefreshProjectsTree();
+            RefreshButtons();
+        }
+
+        private void RefreshProjectsTree()
+        {
+            Settings settings = (Settings)pluginMain.Settings;
+            foreach (string project in settings.Projects) projects.Nodes.Add(project);
+            if (projects.Nodes.Count > 0) projects.SelectedNode = projects.Nodes[0];
+        }
+
+        private void RefreshButtons()
+        {
+            bool selNodeNotNull = projects.SelectedNode != null;
+            reset.Enabled = selNodeNotNull;
+            remove.Enabled = selNodeNotNull;
         }
     }
 }

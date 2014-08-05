@@ -1,8 +1,11 @@
-﻿using PluginCore;
+﻿using ADProjectSettingsManager.Controls;
+using PluginCore;
 using PluginCore.Helpers;
 using PluginCore.Utilities;
 using System.ComponentModel;
 using System.IO;
+using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace ADProjectSettingsManager
 {
@@ -79,27 +82,19 @@ namespace ADProjectSettingsManager
 
         #region Required Methods
 
-        /// <summary>
-        /// Initializes the plugin
-        /// </summary>
         public void Initialize()
         {
             InitBasics();
             LoadSettings();
             AddEventHandlers();
+            CreateMenuItems();
         }
 
-        /// <summary>
-        /// Disposes the plugin
-        /// </summary>
         public void Dispose()
         {
             SaveSettings();
         }
 
-        /// <summary>
-        /// Handles the incoming events
-        /// </summary>
         public void HandleEvent(object sender, NotifyEvent e, HandlingPriority prority)
         {
         }
@@ -108,36 +103,45 @@ namespace ADProjectSettingsManager
 
         #region Custom Methods
 
-        /// <summary>
-        /// Initializes important variables
-        /// </summary>
-        public void InitBasics()
+        private void InitBasics()
         {
             string dataPath = Path.Combine(PathHelper.DataDir, "ADProjectSettingsManager");
             if (!Directory.Exists(dataPath)) Directory.CreateDirectory(dataPath);
             settingFilename = Path.Combine(dataPath, "Settings.fdb");
         }
 
-        /// <summary>
-        /// Adds the required event handlers
-        /// </summary> 
-        public void AddEventHandlers()
+        private void AddEventHandlers()
         {
         }
 
-        public void LoadSettings()
+        private void LoadSettings()
         {
             settings = new Settings();
             if (!File.Exists(settingFilename)) SaveSettings();
             else settings = (Settings)ObjectSerializer.Deserialize(settingFilename, settings); ;
         }
 
-        /// <summary>
-        /// Saves the plugin settings
-        /// </summary>
-        public void SaveSettings()
+        private void CreateMenuItems()
+        {
+            System.Drawing.Image icon = PluginBase.MainForm.FindImage("99");
+            ToolStripMenuItem item = new ToolStripMenuItem("ADProject's settings manager", icon, OpenPanel);
+            ToolStripMenuItem menu = (ToolStripMenuItem)PluginBase.MainForm.FindMenuItem("ViewMenu");
+            PluginBase.MainForm.RegisterShortcutItem("ViewMenu.ADProjectSettingsManager", item);
+            menu.DropDownItems.Add(item);
+        }
+
+        private void SaveSettings()
         {
             ObjectSerializer.Serialize(settingFilename, settings);
+        }
+
+        #endregion
+
+        #region Event Handlers
+
+        private void OpenPanel(object sender, System.EventArgs e)
+        {
+            new PluginUI(this).Show();
         }
 
         #endregion

@@ -2,7 +2,7 @@
 namespace ADProjectSettingsManager
 {
     [Serializable]
-    class Settings
+    public class Settings
     {
     }
 }

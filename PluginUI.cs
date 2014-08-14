@@ -14,11 +14,11 @@ namespace ADProjectSettingsManager.Controls
             this.pluginMain = pluginMain;
             InitializeComponent();
             RefreshProjectsTree();
-            RefreshButtons();
         }
 
         private void RefreshProjectsTree()
         {
+            projects.Nodes.Clear();
             Settings settings = (Settings)pluginMain.Settings;
             foreach (string project in settings.Projects) projects.Nodes.Add(project);
             if (projects.Nodes.Count > 0 && projects.SelectedNode == null) projects.SelectedNode = projects.Nodes[0];
@@ -29,6 +29,7 @@ namespace ADProjectSettingsManager.Controls
             bool selNodeNotNull = projects.SelectedNode != null;
             reset.Enabled = selNodeNotNull;
             remove.Enabled = selNodeNotNull;
+            PluginCore.Managers.TraceManager.Add("selNodeNotNull: " + selNodeNotNull);
         }
 
         private string GetProjectExtension()
@@ -46,7 +47,7 @@ namespace ADProjectSettingsManager.Controls
             string projExt = GetProjectExtension();
             string projectPath = PluginBase.CurrentProject.ProjectPath;
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "(*." + projExt + ")|*." + projExt;
+            dialog.Filter = "(*" + projExt + ")|*" + projExt;
             dialog.InitialDirectory = Path.GetDirectoryName(projectPath);
             dialog.FileName = Path.GetFileName(projectPath);
             dialog.FileOk += OnOpenFIleDialogOk;
@@ -55,11 +56,18 @@ namespace ADProjectSettingsManager.Controls
 
         private void OnOpenFIleDialogOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Settings settings = (Settings)pluginMain.Settings;
             string projectPath = ((OpenFileDialog)sender).FileName;
-            if (!IsValidFile(projectPath)) return;
-            ((Settings)pluginMain.Settings).Projects.Add(projectPath);
+            if (!IsValidFile(projectPath) || settings.Projects.Contains(projectPath)) return;
+            (settings).Projects.Add(projectPath);
             RefreshProjectsTree();
-            RefreshButtons();
+        }
+
+        private void OnRemoveClick(object sender, System.EventArgs e)
+        {
+            ((Settings)pluginMain.Settings).Projects.Remove(projects.SelectedNode.Text);
+            projects.SelectedNode = null;
+            RefreshProjectsTree();
         }
     }
 }

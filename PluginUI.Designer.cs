@@ -44,6 +44,7 @@
             this.projects.ShowRootLines = false;
             this.projects.Size = new System.Drawing.Size(178, 387);
             this.projects.TabIndex = 0;
+            this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(OnProjectsAfterSelected);
             // 
             // properties
             // 

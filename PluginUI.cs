@@ -14,22 +14,21 @@ namespace ADProjectSettingsManager.Controls
             this.pluginMain = pluginMain;
             InitializeComponent();
             RefreshProjectsTree();
+            RefreshButtons();
         }
 
         private void RefreshProjectsTree()
         {
             projects.Nodes.Clear();
-            Settings settings = (Settings)pluginMain.Settings;
-            foreach (string project in settings.Projects) projects.Nodes.Add(project);
+            foreach (string project in ((Settings)pluginMain.Settings).Projects) projects.Nodes.Add(project);
             if (projects.Nodes.Count > 0 && projects.SelectedNode == null) projects.SelectedNode = projects.Nodes[0];
         }
 
         private void RefreshButtons()
         {
-            bool selNodeNotNull = projects.SelectedNode != null;
-            reset.Enabled = selNodeNotNull;
-            remove.Enabled = selNodeNotNull;
-            PluginCore.Managers.TraceManager.Add("selNodeNotNull: " + selNodeNotNull);
+            bool enabled = projects.Nodes.Count > 0 && projects.SelectedNode != null;
+            reset.Enabled = enabled;
+            remove.Enabled = enabled;
         }
 
         private string GetProjectExtension()
@@ -41,6 +40,8 @@ namespace ADProjectSettingsManager.Controls
         {
             return Path.GetExtension(path) == GetProjectExtension();
         }
+
+        #region Event Handlers
 
         private void OnAddClick(object sender, System.EventArgs e)
         {
@@ -60,14 +61,22 @@ namespace ADProjectSettingsManager.Controls
             string projectPath = ((OpenFileDialog)sender).FileName;
             if (!IsValidFile(projectPath) || settings.Projects.Contains(projectPath)) return;
             (settings).Projects.Add(projectPath);
-            RefreshProjectsTree();
+            projects.SelectedNode = projects.Nodes.Add(projectPath);
+            RefreshButtons();
         }
 
         private void OnRemoveClick(object sender, System.EventArgs e)
         {
             ((Settings)pluginMain.Settings).Projects.Remove(projects.SelectedNode.Text);
-            projects.SelectedNode = null;
-            RefreshProjectsTree();
+            projects.Nodes.Remove(projects.SelectedNode);
+            RefreshButtons();
         }
+
+        private void OnProjectsAfterSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
+        {
+            RefreshButtons();
+        }
+
+        #endregion
     }
 }

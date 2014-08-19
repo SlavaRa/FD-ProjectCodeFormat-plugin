@@ -78,13 +78,10 @@ namespace ADProjectSettingsManager.Controls
         {
             Settings settings = (Settings)pluginMain.Settings;
             string path = ((OpenFileDialog)sender).FileName;
-            if (!IsValidFile(path)) return;
-            foreach (Item item in settings.Items)
-                if (item.Path == path) return;
-            Item newItem = new Item(path);
-            settings.Items.Add(newItem);
-            projects.SelectedNode = projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
-            properties.SelectedObject = newItem.Settings;
+            if (!IsValidFile(path) || settings.Has(path)) return;
+            Item item = settings.Add(path);
+            projects.SelectedNode = projects.Nodes.Add(item.Path, item.GetName());
+            properties.SelectedObject = item.Settings;
             RefreshButtons();
         }
 

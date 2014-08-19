@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
+
 namespace ADProjectSettingsManager
 {
     [Serializable]
@@ -20,6 +21,21 @@ namespace ADProjectSettingsManager
 
         [Browsable(false)]
         public List<Item> Items { get; set; }
+
+        internal bool Has(string path)
+        {
+            foreach (Item item in Items)
+                if (item.Path == path)
+                    return true;
+            return false;
+        }
+
+        internal Item Add(string path)
+        {
+            Item item = new Item(path);
+            Items.Add(item);
+            return item;
+        }
 
         internal Item Get(string path)
         {

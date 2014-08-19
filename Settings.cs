@@ -10,8 +10,32 @@ namespace ADProjectSettingsManager
     [Serializable]
     public class Settings
     {
+        public Settings()
+        {
+            DefaultSettings = new Item("default");
+        }
+
+        [Browsable(false)]
+        public Item DefaultSettings { get; set; }
+
         [Browsable(false)]
         public List<Item> Items { get; set; }
+
+        internal Item Get(string path)
+        {
+            foreach (Item item in Items)
+                if (item.Path == path)
+                    return item;
+            return DefaultSettings;
+        }
+
+        internal bool Remove(string path)
+        {
+            foreach (Item item in Items)
+                if (item.Path == path)
+                    return Items.Remove(item);
+            return false;
+        }
     }
 
     [Serializable]
@@ -28,6 +52,11 @@ namespace ADProjectSettingsManager
 
         [Browsable(false)]
         public ItemSettings Settings { get; private set; }
+
+        public string GetName()
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(Path);
+        }
     }
 
     [Serializable]
@@ -35,15 +64,7 @@ namespace ADProjectSettingsManager
     {
         public ItemSettings()
         {
-            ISettings settings = PluginBase.Settings;
-            CodingStyle = settings.CodingStyle;
-            TabIndents = settings.TabIndents;
-            IndentSize = settings.IndentSize;
-            TabWidth = settings.TabWidth;
-            UseTabs = settings.UseTabs;
-            CustomProjectsDir = settings.CustomProjectsDir;
-            CustomSnippetDir = settings.CustomSnippetDir;
-            CustomTemplateDir = settings.CustomTemplateDir;
+            CopyFrom(PluginBase.Settings);
         }
 
         #region Indenting
@@ -104,5 +125,29 @@ namespace ADProjectSettingsManager
         public string CustomProjectsDir { get; set; }
 
         #endregion
+
+        internal void CopyFrom(ISettings settings)
+        {
+            CodingStyle = settings.CodingStyle;
+            TabIndents = settings.TabIndents;
+            IndentSize = settings.IndentSize;
+            TabWidth = settings.TabWidth;
+            UseTabs = settings.UseTabs;
+            CustomProjectsDir = settings.CustomProjectsDir;
+            CustomSnippetDir = settings.CustomSnippetDir;
+            CustomTemplateDir = settings.CustomTemplateDir;
+        }
+
+        internal void CopyTo(ISettings settings)
+        {
+            settings.CodingStyle = CodingStyle;
+            settings.TabIndents = TabIndents;
+            settings.IndentSize = IndentSize;
+            settings.TabWidth = TabWidth;
+            settings.UseTabs = UseTabs;
+            settings.CustomProjectsDir = CustomProjectsDir;
+            settings.CustomSnippetDir = CustomSnippetDir;
+            settings.CustomTemplateDir = CustomTemplateDir;
+        }
     }
 }

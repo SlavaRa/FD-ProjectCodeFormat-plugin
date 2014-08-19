@@ -35,18 +35,21 @@ namespace ADProjectSettingsManager.Controls
         private void RefreshProjectsTree()
         {
             projects.Nodes.Clear();
-            foreach (Item item in ((Settings)pluginMain.Settings).Items)
+            Settings settings = (Settings)pluginMain.Settings;
+            Item defaultItem = settings.DefaultSettings;
+            projects.SelectedNode = projects.Nodes.Add(defaultItem.Path, defaultItem.GetName());
+            foreach (Item item in settings.Items)
             {
-                string path = item.Path;
-                projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
-                properties.SelectedObject = item.Settings;
+                projects.Nodes.Add(item.Path, item.GetName());
             }
-            if (projects.Nodes.Count > 0 && projects.SelectedNode == null) projects.SelectedNode = projects.Nodes[0];
+            properties.SelectedObject = defaultItem.Settings;
         }
 
         private void RefreshButtons()
         {
-            bool enabled = projects.Nodes.Count > 0 && projects.SelectedNode != null;
+            bool enabled = projects.Nodes.Count > 0 
+                && projects.SelectedNode != null
+                && projects.SelectedNode.Index > 0;
             reset.Enabled = enabled;
             remove.Enabled = enabled;
         }
@@ -87,30 +90,20 @@ namespace ADProjectSettingsManager.Controls
 
         private void OnRemoveClick(object sender, System.EventArgs e)
         {
-            Settings settings = (Settings)pluginMain.Settings;
             TreeNode node = projects.SelectedNode;
-            string path = node.Name;
-            foreach (Item item in settings.Items)
-                if (item.Path == path)
-                {
-                    settings.Items.Remove(item);
-                    break;
-                }
+            Settings settings = (Settings)pluginMain.Settings;
+            settings.Remove(node.Name);
             projects.Nodes.Remove(node);
-            properties.SelectedObject = null;
+            projects.SelectedNode = projects.Nodes[0];
+            properties.SelectedObject = settings.DefaultSettings.Settings;
             RefreshButtons();
         }
 
         private void OnProjectsAfterSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
             RefreshButtons();
-            string path = projects.SelectedNode.Name;
-            foreach (Item item in ((Settings)pluginMain.Settings).Items)
-                if (item.Path == path)
-                {
-                    properties.SelectedObject = item.Settings;
-                    break;
-                }
+            Item item = ((Settings)pluginMain.Settings).Get(projects.SelectedNode.Name);
+            properties.SelectedObject = item.Settings;
         }
 
         #endregion

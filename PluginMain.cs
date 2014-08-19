@@ -105,7 +105,7 @@ namespace ADProjectSettingsManager
                     DataEvent de = (DataEvent)e;
                     if (de.Action == "ProjectManager.Project")
                     {
-                        //FIXME slavara: implement me
+                        settings.Get(PluginBase.CurrentProject.ProjectPath).Settings.CopyTo(PluginBase.Settings);
                     }
                     break;
             }

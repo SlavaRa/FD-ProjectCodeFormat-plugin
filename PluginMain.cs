@@ -15,8 +15,8 @@ namespace ADProjectSettingsManager
         private string name = "ADProjectSettingsManager";
         private string guid = "463e5424-175d-4452-8583-94b1edd7ae76";
         private string desc = "";//TODO slavara: implement me
-        private string help = "www.flashdevelop.org/community/";
-        private string auth = "FlashDevelop Team";
+        private string help = "";
+        private string auth = "SlavaRa";
         private string settingFilename;
         private Settings settings;
 

@@ -7,11 +7,20 @@ namespace ADProjectSettingsManager.Controls
 {
     public partial class PluginUI : Form
     {
-        private PluginMain pluginMain;
+        private readonly List<string> projectExtensions;
+        private readonly string extensionsFilter;
+        private readonly PluginMain pluginMain;
 
         public PluginUI(PluginMain pluginMain)
         {
             this.pluginMain = pluginMain;
+            projectExtensions = new List<string>() { ".as3proj", ".hxproj" };
+            for (int i = 0; i < projectExtensions.Count; i++)
+            {
+                string ext = projectExtensions[i];
+                if (i == 0) extensionsFilter = "(*" + ext + ")|*" + ext;
+                else extensionsFilter += "|(*" + ext + ")|*" + ext;
+            }
             InitializeComponent();
             RefreshProjectsTree();
             RefreshButtons();
@@ -20,7 +29,11 @@ namespace ADProjectSettingsManager.Controls
         private void RefreshProjectsTree()
         {
             projects.Nodes.Clear();
-            foreach (string project in ((Settings)pluginMain.Settings).Projects) projects.Nodes.Add(project);
+            foreach (Item item in ((Settings)pluginMain.Settings).Items)
+            {
+                string path = item.Path;
+                projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
+            }
             if (projects.Nodes.Count > 0 && projects.SelectedNode == null) projects.SelectedNode = projects.Nodes[0];
         }
 
@@ -31,26 +44,20 @@ namespace ADProjectSettingsManager.Controls
             remove.Enabled = enabled;
         }
 
-        private string GetProjectExtension()
-        {
-            return "." + PluginBase.CurrentProject.Language + "proj";
-        }
-
         private bool IsValidFile(string path)
         {
-            return Path.GetExtension(path) == GetProjectExtension();
+            return projectExtensions.Contains(Path.GetExtension(path));
         }
 
         #region Event Handlers
 
         private void OnAddClick(object sender, System.EventArgs e)
         {
-            string projExt = GetProjectExtension();
-            string projectPath = PluginBase.CurrentProject.ProjectPath;
+            string path = PluginBase.CurrentProject.ProjectPath;
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Filter = "(*" + projExt + ")|*" + projExt;
-            dialog.InitialDirectory = Path.GetDirectoryName(projectPath);
-            dialog.FileName = Path.GetFileName(projectPath);
+            dialog.Filter = extensionsFilter;
+            dialog.InitialDirectory = Path.GetDirectoryName(path);
+            dialog.FileName = Path.GetFileName(path);
             dialog.FileOk += OnOpenFileDialogOk;
             dialog.ShowDialog(this);
         }
@@ -58,17 +65,27 @@ namespace ADProjectSettingsManager.Controls
         private void OnOpenFileDialogOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Settings settings = (Settings)pluginMain.Settings;
-            string projectPath = ((OpenFileDialog)sender).FileName;
-            if (!IsValidFile(projectPath) || settings.Projects.Contains(projectPath)) return;
-            (settings).Projects.Add(projectPath);
-            projects.SelectedNode = projects.Nodes.Add(projectPath);
+            string path = ((OpenFileDialog)sender).FileName;
+            if (!IsValidFile(path)) return;
+            foreach (Item item in settings.Items)
+                if (item.Path == path) return;
+            settings.Items.Add(new Item(path));
+            projects.SelectedNode = projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
             RefreshButtons();
         }
 
         private void OnRemoveClick(object sender, System.EventArgs e)
         {
-            ((Settings)pluginMain.Settings).Projects.Remove(projects.SelectedNode.Text);
-            projects.Nodes.Remove(projects.SelectedNode);
+            Settings settings = (Settings)pluginMain.Settings;
+            TreeNode node = projects.SelectedNode;
+            string path = node.Name;
+            foreach (Item item in settings.Items)
+                if (item.Path == path)
+                {
+                    settings.Items.Remove(item);
+                    break;
+                }
+            projects.Nodes.Remove(node);
             RefreshButtons();
         }
 

@@ -120,9 +120,9 @@ namespace ADProjectSettingsManager
             settings = new Settings();
             if (!File.Exists(settingFilename)) SaveSettings();
             else settings = (Settings)ObjectSerializer.Deserialize(settingFilename, settings);
-            if (settings.Projects == null)
+            if (settings.Items == null)
             {
-                settings.Projects = new List<string>();
+                settings.Items = new List<Item>();
                 SaveSettings();
             }
         }

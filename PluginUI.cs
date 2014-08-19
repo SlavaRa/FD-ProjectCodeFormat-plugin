@@ -11,6 +11,8 @@ namespace ADProjectSettingsManager.Controls
         private readonly string extensionsFilter;
         private readonly PluginMain pluginMain;
 
+        #region Constructors
+
         public PluginUI(PluginMain pluginMain)
         {
             this.pluginMain = pluginMain;
@@ -25,6 +27,10 @@ namespace ADProjectSettingsManager.Controls
             RefreshProjectsTree();
             RefreshButtons();
         }
+
+        #endregion
+
+        #region Custom Methods
 
         private void RefreshProjectsTree()
         {
@@ -49,6 +55,8 @@ namespace ADProjectSettingsManager.Controls
         {
             return projectExtensions.Contains(Path.GetExtension(path));
         }
+
+        #endregion
 
         #region Event Handlers
 

@@ -1,6 +1,7 @@
 ﻿using ADProjectSettingsManager.Controls;
 using PluginCore;
 using PluginCore.Helpers;
+using PluginCore.Managers;
 using PluginCore.Utilities;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -98,6 +99,16 @@ namespace ADProjectSettingsManager
 
         public void HandleEvent(object sender, NotifyEvent e, HandlingPriority prority)
         {
+            switch (e.Type)
+            {
+                case EventType.Command:
+                    DataEvent de = (DataEvent)e;
+                    if (de.Action == "ProjectManager.Project")
+                    {
+                        //FIXME slavara: implement me
+                    }
+                    break;
+            }
         }
 
         #endregion
@@ -113,6 +124,7 @@ namespace ADProjectSettingsManager
 
         private void AddEventHandlers()
         {
+            EventManager.AddEventHandler(this, EventType.Command);
         }
 
         private void LoadSettings()

@@ -33,6 +33,7 @@ namespace ADProjectSettingsManager.Controls
             {
                 string path = item.Path;
                 projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
+                properties.SelectedObject = item.Settings;
             }
             if (projects.Nodes.Count > 0 && projects.SelectedNode == null) projects.SelectedNode = projects.Nodes[0];
         }
@@ -69,8 +70,10 @@ namespace ADProjectSettingsManager.Controls
             if (!IsValidFile(path)) return;
             foreach (Item item in settings.Items)
                 if (item.Path == path) return;
-            settings.Items.Add(new Item(path));
+            Item newItem = new Item(path);
+            settings.Items.Add(newItem);
             projects.SelectedNode = projects.Nodes.Add(path, Path.GetFileNameWithoutExtension(path));
+            properties.SelectedObject = newItem.Settings;
             RefreshButtons();
         }
 
@@ -86,12 +89,20 @@ namespace ADProjectSettingsManager.Controls
                     break;
                 }
             projects.Nodes.Remove(node);
+            properties.SelectedObject = null;
             RefreshButtons();
         }
 
         private void OnProjectsAfterSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
             RefreshButtons();
+            string path = projects.SelectedNode.Name;
+            foreach (Item item in ((Settings)pluginMain.Settings).Items)
+                if (item.Path == path)
+                {
+                    properties.SelectedObject = item.Settings;
+                    break;
+                }
         }
 
         #endregion

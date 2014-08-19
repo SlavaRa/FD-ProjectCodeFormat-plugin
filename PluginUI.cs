@@ -50,11 +50,11 @@ namespace ADProjectSettingsManager.Controls
             dialog.Filter = "(*" + projExt + ")|*" + projExt;
             dialog.InitialDirectory = Path.GetDirectoryName(projectPath);
             dialog.FileName = Path.GetFileName(projectPath);
-            dialog.FileOk += OnOpenFIleDialogOk;
+            dialog.FileOk += OnOpenFileDialogOk;
             dialog.ShowDialog(this);
         }
 
-        private void OnOpenFIleDialogOk(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnOpenFileDialogOk(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Settings settings = (Settings)pluginMain.Settings;
             string projectPath = ((OpenFileDialog)sender).FileName;

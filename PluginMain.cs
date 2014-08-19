@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
 namespace ADProjectSettingsManager
 {
@@ -94,6 +93,7 @@ namespace ADProjectSettingsManager
 
         public void Dispose()
         {
+            settings.DefaultSettings.Settings.CopyTo(PluginBase.Settings);
             SaveSettings();
         }
 

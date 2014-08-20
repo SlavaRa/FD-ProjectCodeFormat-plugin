@@ -32,7 +32,7 @@
             this.properties = new System.Windows.Forms.PropertyGrid();
             this.remove = new System.Windows.Forms.Button();
             this.add = new System.Windows.Forms.Button();
-            this.cancel = new System.Windows.Forms.Button();
+            this.close = new System.Windows.Forms.Button();
             this.reset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -40,11 +40,9 @@
             // 
             this.projects.Location = new System.Drawing.Point(13, 13);
             this.projects.Name = "projects";
-            this.projects.ShowPlusMinus = true;
-            this.projects.ShowRootLines = true;
             this.projects.Size = new System.Drawing.Size(178, 387);
             this.projects.TabIndex = 0;
-            this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(OnProjectsAfterSelected);
+            this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnProjectsAfterSelected);
             // 
             // properties
             // 
@@ -76,15 +74,16 @@
             this.add.UseVisualStyleBackColor = true;
             this.add.Click += new System.EventHandler(this.OnAddClick);
             // 
-            // cancel
+            // close
             // 
-            this.cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancel.Location = new System.Drawing.Point(537, 406);
-            this.cancel.Name = "cancel";
-            this.cancel.Size = new System.Drawing.Size(75, 23);
-            this.cancel.TabIndex = 4;
-            this.cancel.Text = "Close";
-            this.cancel.UseVisualStyleBackColor = true;
+            this.close.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.close.Location = new System.Drawing.Point(537, 406);
+            this.close.Name = "close";
+            this.close.Size = new System.Drawing.Size(75, 23);
+            this.close.TabIndex = 4;
+            this.close.Text = "close";
+            this.close.UseVisualStyleBackColor = true;
+            this.close.Click += new System.EventHandler(this.Close_Click);
             // 
             // reset
             // 
@@ -98,12 +97,12 @@
             // 
             // PluginUI
             // 
-            this.AcceptButton = this.cancel;
+            this.AcceptButton = this.close;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(624, 441);
             this.Controls.Add(this.reset);
-            this.Controls.Add(this.cancel);
+            this.Controls.Add(this.close);
             this.Controls.Add(this.add);
             this.Controls.Add(this.remove);
             this.Controls.Add(this.properties);
@@ -125,7 +124,7 @@
         private System.Windows.Forms.PropertyGrid properties;
         private System.Windows.Forms.Button remove;
         private System.Windows.Forms.Button add;
-        private System.Windows.Forms.Button cancel;
+        private System.Windows.Forms.Button close;
         private System.Windows.Forms.Button reset;
     }
 }

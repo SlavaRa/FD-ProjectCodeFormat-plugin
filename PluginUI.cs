@@ -108,8 +108,15 @@ namespace ADProjectSettingsManager.Controls
         {
             RefreshButtons();
             TreeNode node = projects.SelectedNode;
-            if (node.Tag as string == "node") properties.SelectedObject = null;
+            string tag = (string)node.Tag;
+            if (tag == "node") properties.SelectedObject = null;
             else properties.SelectedObject = ((Settings)pluginMain.Settings).Get(node.Name).Settings;
+            properties.Enabled = tag != "default" && tag != "node";
+        }
+
+        private void Close_Click(object sender, System.EventArgs e)
+        {
+            Hide();
         }
 
         #endregion

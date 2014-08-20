@@ -14,7 +14,7 @@ namespace ProjectCodeFormat
     {
         private string name = "ProjectCodeFormat";
         private string guid = "463e5424-175d-4452-8583-94b1edd7ae76";
-        private string desc = "";//TODO slavara: implement me
+        private string desc = "";
         private string help = "";
         private string auth = "SlavaRa";
         private string settingFilename;

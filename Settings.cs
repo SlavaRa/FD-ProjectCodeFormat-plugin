@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Windows.Forms.Design;
 
-namespace ADProjectSettingsManager
+namespace ProjectCodeFormat
 {
     [Serializable]
     public class Settings

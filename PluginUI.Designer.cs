@@ -1,4 +1,4 @@
-﻿namespace ADProjectSettingsManager.Controls
+﻿namespace ProjectCodeFormat.Controls
 {
     partial class PluginUI
     {

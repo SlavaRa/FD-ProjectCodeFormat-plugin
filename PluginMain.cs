@@ -1,18 +1,18 @@
-﻿using ADProjectSettingsManager.Controls;
-using PluginCore;
+﻿using PluginCore;
 using PluginCore.Helpers;
 using PluginCore.Managers;
 using PluginCore.Utilities;
+using ProjectCodeFormat.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ADProjectSettingsManager
+namespace ProjectCodeFormat
 {
     public class PluginMain : IPlugin
     {
-        private string name = "ADProjectSettingsManager";
+        private string name = "ProjectCodeFormat";
         private string guid = "463e5424-175d-4452-8583-94b1edd7ae76";
         private string desc = "";//TODO slavara: implement me
         private string help = "";
@@ -117,7 +117,7 @@ namespace ADProjectSettingsManager
 
         private void InitBasics()
         {
-            string dataPath = Path.Combine(PathHelper.DataDir, "ADProjectSettingsManager");
+            string dataPath = Path.Combine(PathHelper.DataDir, Name);
             if (!Directory.Exists(dataPath)) Directory.CreateDirectory(dataPath);
             settingFilename = Path.Combine(dataPath, "Settings.fdb");
         }
@@ -142,9 +142,9 @@ namespace ADProjectSettingsManager
         private void CreateMenuItems()
         {
             System.Drawing.Image icon = PluginBase.MainForm.FindImage("99");
-            ToolStripMenuItem item = new ToolStripMenuItem("ADProject's settings manager", icon, OpenPanel);
+            ToolStripMenuItem item = new ToolStripMenuItem("Project Code Format", icon, OpenPanel);
             ToolStripMenuItem menu = (ToolStripMenuItem)PluginBase.MainForm.FindMenuItem("ViewMenu");
-            PluginBase.MainForm.RegisterShortcutItem("ViewMenu.ADProjectSettingsManager", item);
+            PluginBase.MainForm.RegisterShortcutItem("ViewMenu.ProjectCodeFormat", item);
             menu.DropDownItems.Add(item);
         }
 

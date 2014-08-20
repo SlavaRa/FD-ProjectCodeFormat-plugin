@@ -1,2 +1,4 @@
-FD-ProjectCodeFormat-plugin
+FlashDevelop ProjectCodeFormat plugin
+===========================
+Отдельное спасибо товарищу @etc за название.
 ===========================

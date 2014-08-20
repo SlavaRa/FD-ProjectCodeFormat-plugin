@@ -38,10 +38,14 @@ namespace ADProjectSettingsManager.Controls
             Settings settings = (Settings)pluginMain.Settings;
             Item defaultItem = settings.DefaultSettings;
             projects.SelectedNode = projects.Nodes.Add(defaultItem.Path, defaultItem.GetName());
+            projects.Nodes.Add(".as3proj", "ActionScript 3").Tag = string.Empty;
+            projects.Nodes.Add(".hxproj", "Haxe").Tag = string.Empty;
             foreach (Item item in settings.Items)
             {
-                projects.Nodes.Add(item.Path, item.GetName());
+                PluginCore.Managers.TraceManager.Add(item.GetExt());
+                projects.Nodes[item.GetExt()].Nodes.Add(item.Path, item.GetName());
             }
+            projects.ExpandAll();
             properties.SelectedObject = defaultItem.Settings;
         }
 
@@ -49,7 +53,8 @@ namespace ADProjectSettingsManager.Controls
         {
             bool enabled = projects.Nodes.Count > 0 
                 && projects.SelectedNode != null
-                && projects.SelectedNode.Index > 0;
+                && projects.SelectedNode.Index > 0
+                && projects.SelectedNode.Tag != string.Empty;
             reset.Enabled = enabled;
             remove.Enabled = enabled;
         }
@@ -80,7 +85,9 @@ namespace ADProjectSettingsManager.Controls
             string path = ((OpenFileDialog)sender).FileName;
             if (!IsValidFile(path) || settings.Has(path)) return;
             Item item = settings.Add(path);
-            projects.SelectedNode = projects.Nodes.Add(item.Path, item.GetName());
+            TreeNode node = projects.Nodes[item.GetExt()];
+            node.Expand();
+            projects.SelectedNode = node.Nodes.Add(item.Path, item.GetName());
             properties.SelectedObject = item.Settings;
             RefreshButtons();
         }
@@ -90,7 +97,8 @@ namespace ADProjectSettingsManager.Controls
             TreeNode node = projects.SelectedNode;
             Settings settings = (Settings)pluginMain.Settings;
             settings.Remove(node.Name);
-            projects.Nodes.Remove(node);
+            node.Parent.Expand();
+            node.Parent.Nodes.Remove(node);
             projects.SelectedNode = projects.Nodes[0];
             properties.SelectedObject = settings.DefaultSettings.Settings;
             RefreshButtons();
@@ -99,8 +107,12 @@ namespace ADProjectSettingsManager.Controls
         private void OnProjectsAfterSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
             RefreshButtons();
-            Item item = ((Settings)pluginMain.Settings).Get(projects.SelectedNode.Name);
-            properties.SelectedObject = item.Settings;
+            if (e.Node.Tag == string.Empty) properties.SelectedObject = null;
+            else
+            {
+                Item item = ((Settings)pluginMain.Settings).Get(projects.SelectedNode.Name);
+                properties.SelectedObject = item.Settings;
+            }
         }
 
         #endregion

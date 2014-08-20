@@ -73,6 +73,11 @@ namespace ADProjectSettingsManager
         {
             return System.IO.Path.GetFileNameWithoutExtension(Path);
         }
+
+        public string GetExt()
+        {
+            return System.IO.Path.GetExtension(Path);
+        }
     }
 
     [Serializable]

@@ -40,8 +40,8 @@
             // 
             this.projects.Location = new System.Drawing.Point(13, 13);
             this.projects.Name = "projects";
-            this.projects.ShowPlusMinus = false;
-            this.projects.ShowRootLines = false;
+            this.projects.ShowPlusMinus = true;
+            this.projects.ShowRootLines = true;
             this.projects.Size = new System.Drawing.Size(178, 387);
             this.projects.TabIndex = 0;
             this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(OnProjectsAfterSelected);

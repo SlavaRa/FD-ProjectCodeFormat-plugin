@@ -38,6 +38,7 @@ namespace ADProjectSettingsManager.Controls
             Settings settings = (Settings)pluginMain.Settings;
             Item defaultItem = settings.DefaultSettings;
             projects.SelectedNode = projects.Nodes.Add(defaultItem.Path, defaultItem.GetName());
+            projects.Nodes[0].Tag = "default";
             projects.Nodes.Add(".as3proj", "ActionScript 3").Tag = "node";
             projects.Nodes.Add(".hxproj", "Haxe").Tag = "node";
             foreach (Item item in settings.Items)
@@ -52,7 +53,7 @@ namespace ADProjectSettingsManager.Controls
         {
             bool enabled = projects.Nodes.Count > 0 
                 && projects.SelectedNode != null
-                && projects.SelectedNode.Index > 0
+                && projects.SelectedNode.Tag as string != "default"
                 && projects.SelectedNode.Tag as string != "node";
             reset.Enabled = enabled;
             remove.Enabled = enabled;

@@ -114,9 +114,14 @@ namespace ADProjectSettingsManager.Controls
             properties.Enabled = tag != "default" && tag != "node";
         }
 
-        private void Close_Click(object sender, System.EventArgs e)
+        private void OnCloseClick(object sender, System.EventArgs e)
         {
             Hide();
+        }
+
+        private void OnSplitterMoved(object sender, System.Windows.Forms.SplitterEventArgs e)
+        {
+            projects.Width = container.Panel1.Width - container.Margin.Horizontal;
         }
 
         #endregion

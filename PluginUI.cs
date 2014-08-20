@@ -38,11 +38,10 @@ namespace ADProjectSettingsManager.Controls
             Settings settings = (Settings)pluginMain.Settings;
             Item defaultItem = settings.DefaultSettings;
             projects.SelectedNode = projects.Nodes.Add(defaultItem.Path, defaultItem.GetName());
-            projects.Nodes.Add(".as3proj", "ActionScript 3").Tag = string.Empty;
-            projects.Nodes.Add(".hxproj", "Haxe").Tag = string.Empty;
+            projects.Nodes.Add(".as3proj", "ActionScript 3").Tag = "node";
+            projects.Nodes.Add(".hxproj", "Haxe").Tag = "node";
             foreach (Item item in settings.Items)
             {
-                PluginCore.Managers.TraceManager.Add(item.GetExt());
                 projects.Nodes[item.GetExt()].Nodes.Add(item.Path, item.GetName());
             }
             projects.ExpandAll();
@@ -54,7 +53,7 @@ namespace ADProjectSettingsManager.Controls
             bool enabled = projects.Nodes.Count > 0 
                 && projects.SelectedNode != null
                 && projects.SelectedNode.Index > 0
-                && projects.SelectedNode.Tag != string.Empty;
+                && projects.SelectedNode.Tag as string != "node";
             reset.Enabled = enabled;
             remove.Enabled = enabled;
         }
@@ -107,12 +106,9 @@ namespace ADProjectSettingsManager.Controls
         private void OnProjectsAfterSelected(object sender, System.Windows.Forms.TreeViewEventArgs e)
         {
             RefreshButtons();
-            if (e.Node.Tag == string.Empty) properties.SelectedObject = null;
-            else
-            {
-                Item item = ((Settings)pluginMain.Settings).Get(projects.SelectedNode.Name);
-                properties.SelectedObject = item.Settings;
-            }
+            TreeNode node = projects.SelectedNode;
+            if (node.Tag as string == "node") properties.SelectedObject = null;
+            else properties.SelectedObject = ((Settings)pluginMain.Settings).Get(node.Name).Settings;
         }
 
         #endregion

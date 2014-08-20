@@ -100,6 +100,8 @@
             this.AcceptButton = this.close;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(624, 441);
             this.Controls.Add(this.reset);
             this.Controls.Add(this.close);
@@ -107,6 +109,7 @@
             this.Controls.Add(this.remove);
             this.Controls.Add(this.properties);
             this.Controls.Add(this.projects);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PluginUI";

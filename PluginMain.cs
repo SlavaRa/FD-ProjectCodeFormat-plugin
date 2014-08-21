@@ -93,7 +93,7 @@ namespace ProjectCodeFormat
 
         public void Dispose()
         {
-            settings.DefaultSettings.Settings.CopyTo(PluginBase.Settings);
+            settings.DefaultItem.Settings.CopyTo(PluginBase.Settings);
             SaveSettings();
         }
 

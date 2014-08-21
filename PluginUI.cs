@@ -38,7 +38,7 @@ namespace ProjectCodeFormat.Controls
         {
             projects.Nodes.Clear();
             Settings settings = (Settings)pluginMain.Settings;
-            Item defaultItem = settings.DefaultSettings;
+            Item defaultItem = settings.DefaultItem;
             projects.Nodes.Add(defaultItem.Path, defaultItem.GetName()).Tag = "default";
             foreach (string ext in projExtToName.Keys) projects.Nodes.Add(ext, projExtToName[ext]).Tag = "node";
             foreach (Item item in settings.Items) projects.Nodes[item.GetExtension()].Nodes.Add(item.Path, item.GetName());
@@ -68,7 +68,7 @@ namespace ProjectCodeFormat.Controls
             node.Parent.Expand();
             node.Parent.Nodes.Remove(node);
             projects.SelectedNode = projects.Nodes[0];
-            properties.SelectedObject = settings.DefaultSettings.Settings;
+            properties.SelectedObject = settings.DefaultItem.Settings;
             RefreshButtons();
         }
 
@@ -123,7 +123,7 @@ namespace ProjectCodeFormat.Controls
             string tag = (string)node.Tag;
             if (tag == "node") properties.SelectedObject = null;
             else properties.SelectedObject = ((Settings)pluginMain.Settings).Get(node.Name).Settings;
-            properties.Enabled = tag != "default" && tag != "node";
+            properties.Enabled = tag != "node";
         }
 
         private void OnProjectsKeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -143,7 +143,7 @@ namespace ProjectCodeFormat.Controls
             if (tag == "node" || tag == "default") return;
             Settings settings = (Settings)pluginMain.Settings;
             ItemSettings itemSettings = settings.Get(node.Name).Settings;
-            itemSettings.CopyFrom(settings.DefaultSettings.Settings);
+            itemSettings.CopyFrom(settings.DefaultItem.Settings);
             properties.SelectedObject = itemSettings;
         }
 

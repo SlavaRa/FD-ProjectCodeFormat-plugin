@@ -13,11 +13,11 @@ namespace ProjectCodeFormat
     {
         public Settings()
         {
-            DefaultSettings = new Item("default");
+            DefaultItem = new Item("default");
         }
 
         [Browsable(false)]
-        public Item DefaultSettings { get; set; }
+        public Item DefaultItem { get; set; }
 
         [Browsable(false)]
         public List<Item> Items { get; set; }
@@ -42,7 +42,7 @@ namespace ProjectCodeFormat
             foreach (Item item in Items)
                 if (item.Path == path)
                     return item;
-            return DefaultSettings;
+            return DefaultItem;
         }
 
         internal bool Remove(string path)

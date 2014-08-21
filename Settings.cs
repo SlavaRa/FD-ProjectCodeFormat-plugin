@@ -69,12 +69,12 @@ namespace ProjectCodeFormat
         [Browsable(false)]
         public ItemSettings Settings { get; private set; }
 
-        public string GetName()
+        internal string GetName()
         {
             return System.IO.Path.GetFileNameWithoutExtension(Path);
         }
 
-        public string GetExt()
+        internal string GetExtension()
         {
             return System.IO.Path.GetExtension(Path);
         }
@@ -148,6 +148,18 @@ namespace ProjectCodeFormat
         #endregion
 
         internal void CopyFrom(ISettings settings)
+        {
+            CodingStyle = settings.CodingStyle;
+            TabIndents = settings.TabIndents;
+            IndentSize = settings.IndentSize;
+            TabWidth = settings.TabWidth;
+            UseTabs = settings.UseTabs;
+            CustomProjectsDir = settings.CustomProjectsDir;
+            CustomSnippetDir = settings.CustomSnippetDir;
+            CustomTemplateDir = settings.CustomTemplateDir;
+        }
+
+        internal void CopyFrom(ItemSettings settings)
         {
             CodingStyle = settings.CodingStyle;
             TabIndents = settings.TabIndents;

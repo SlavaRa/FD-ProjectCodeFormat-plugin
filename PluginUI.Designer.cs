@@ -90,7 +90,7 @@
             this.remove.TabIndex = 5;
             this.remove.Text = "Remove";
             this.remove.UseVisualStyleBackColor = true;
-            this.remove.Click += new System.EventHandler(OnRemoveClick);
+            this.remove.Click += new System.EventHandler(this.OnRemoveClick);
             // 
             // projects
             // 
@@ -98,7 +98,8 @@
             this.projects.Name = "projects";
             this.projects.Size = new System.Drawing.Size(178, 387);
             this.projects.TabIndex = 4;
-            this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(OnProjectsAfterSelected);
+            this.projects.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnProjectsAfterSelected);
+            this.projects.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnProjectsKeyDown);
             // 
             // reset
             // 
@@ -110,6 +111,7 @@
             this.reset.TabIndex = 8;
             this.reset.Text = "Reset";
             this.reset.UseVisualStyleBackColor = true;
+            this.reset.Click += new System.EventHandler(this.OnResetClick);
             // 
             // close
             // 
@@ -121,7 +123,7 @@
             this.close.TabIndex = 7;
             this.close.Text = "close";
             this.close.UseVisualStyleBackColor = true;
-            this.close.Click += new System.EventHandler(OnCloseClick);
+            this.close.Click += new System.EventHandler(this.OnCloseClick);
             // 
             // properties
             // 
@@ -155,7 +157,6 @@
             this.container.Panel2.ResumeLayout(false);
             this.container.ResumeLayout(false);
             this.ResumeLayout(false);
-
         }
 
         #endregion

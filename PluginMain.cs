@@ -105,7 +105,9 @@ namespace ProjectCodeFormat
                     DataEvent de = (DataEvent)e;
                     if (de.Action == "ProjectManager.Project")
                     {
-                        settings.Get(PluginBase.CurrentProject.ProjectPath).Settings.CopyTo(PluginBase.Settings);
+                        IProject project = PluginBase.CurrentProject;
+                        Item item = project != null ? settings.Get(project.ProjectPath) : settings.DefaultItem;
+                        item.Settings.CopyTo(PluginBase.Settings);
                     }
                     break;
             }

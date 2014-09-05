@@ -15,9 +15,13 @@ namespace ProjectCodeFormat.Controls
             { ".as3proj", "ActionScript 3"},
             { ".hxproj", "Haxe"}
         };
+        private readonly Dictionary<string, int> projExtToImageIndex = new Dictionary<string, int>
+        {
+            {".as3proj", 1},
+            {".hxproj", 2}
+        };
         private readonly string extensionsFilter;
         private readonly PluginMain pluginMain;
-        private Dictionary<string, int> projExtToImageIndex = new Dictionary<string, int>();
 
         #region Constructors
 
@@ -49,8 +53,6 @@ namespace ProjectCodeFormat.Controls
             imageList.Images.Add(ProjectManager.Controls.Icons.Get(274).Img);
             imageList.Images.Add(ProjectManager.Controls.Icons.GetResource("Icons.ActionscriptFile.png").Img);
             imageList.Images.Add(ProjectManager.Controls.Icons.GetResource("Icons.HaxeFile.png").Img);
-            projExtToImageIndex[".as3proj"] = 1;
-            projExtToImageIndex[".hxproj"] = 2;
             projects.ImageList = imageList;
             projects.ImageIndex = 0;
         }

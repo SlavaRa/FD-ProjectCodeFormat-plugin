@@ -1,5 +1,7 @@
 ﻿using PluginCore;
+using PluginCore.Helpers;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,17 +10,20 @@ namespace ProjectCodeFormat.Controls
     public partial class PluginUI : Form
     {
         private readonly List<string> projectExtensions = new List<string>() { ".as3proj", ".hxproj" };
-        private readonly Dictionary<string, string> projExtToName = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> projExtToName = new Dictionary<string, string>
+        {
+            { ".as3proj", "ActionScript 3"},
+            { ".hxproj", "Haxe"}
+        };
         private readonly string extensionsFilter;
         private readonly PluginMain pluginMain;
+        private Dictionary<string, int> projExtToImageIndex = new Dictionary<string, int>();
 
         #region Constructors
 
         public PluginUI(PluginMain pluginMain)
         {
             this.pluginMain = pluginMain;
-            projExtToName.Add(".as3proj", "ActionScript 3");
-            projExtToName.Add(".hxproj", "Haxe");
             for (int i = 0; i < projectExtensions.Count; i++)
             {
                 string ext = projectExtensions[i];
@@ -26,6 +31,7 @@ namespace ProjectCodeFormat.Controls
                 else extensionsFilter += "|(*" + ext + ")|*" + ext;
             }
             InitializeComponent();
+            InitializeImages();
             InitializeProjectsTree();
             RefreshButtons();
         }
@@ -33,15 +39,34 @@ namespace ProjectCodeFormat.Controls
         #endregion
 
         #region Custom Methods
+        
+        private void InitializeImages()
+        {
+            ImageList imageList = new ImageList();
+            imageList.ColorDepth = ColorDepth.Depth32Bit;
+            imageList.TransparentColor = Color.Transparent;
+            imageList.ImageSize = ScaleHelper.Scale(new Size(16, 16));
+            imageList.Images.Add(ProjectManager.Controls.Icons.Get(274).Img);
+            imageList.Images.Add(ProjectManager.Controls.Icons.GetResource("Icons.ActionscriptFile.png").Img);
+            imageList.Images.Add(ProjectManager.Controls.Icons.GetResource("Icons.HaxeFile.png").Img);
+            projExtToImageIndex[".as3proj"] = 1;
+            projExtToImageIndex[".hxproj"] = 2;
+            projects.ImageList = imageList;
+            projects.ImageIndex = 0;
+        }
 
         private void InitializeProjectsTree()
         {
-            projects.Nodes.Clear();
             Settings settings = (Settings)pluginMain.Settings;
             Item defaultItem = settings.DefaultItem;
             projects.Nodes.Add(defaultItem.Path, defaultItem.GetName()).Tag = "default";
             foreach (string ext in projExtToName.Keys) projects.Nodes.Add(ext, projExtToName[ext]).Tag = "node";
-            foreach (Item item in settings.Items) projects.Nodes[item.GetExtension()].Nodes.Add(item.Path, item.GetName());
+            foreach (Item item in settings.Items)
+            {
+                string ext = item.GetExtension();
+                int index = projExtToImageIndex.ContainsKey(ext) ? projExtToImageIndex[ext] : 0;
+                projects.Nodes[ext].Nodes.Add(item.Path, item.GetName(), index).SelectedImageIndex = index;
+            }
             projects.ExpandAll();
             Item curProjItem = settings.Get(PluginBase.CurrentProject.ProjectPath);
             TreeNode node = projects.Nodes[curProjItem.GetExtension()];
@@ -104,9 +129,10 @@ namespace ProjectCodeFormat.Controls
             string path = ((OpenFileDialog)sender).FileName;
             if (!projectExtensions.Contains(Path.GetExtension(path)) || settings.Has(path)) return;
             Item item = settings.Add(path);
-            TreeNode node = projects.Nodes[item.GetExtension()];
+            string ext = item.GetExtension();
+            TreeNode node = projects.Nodes[ext];
             node.Expand();
-            projects.SelectedNode = node.Nodes.Add(item.Path, item.GetName());
+            projects.SelectedNode = node.Nodes.Add(item.Path, item.GetName(), projExtToImageIndex[ext]);
             properties.SelectedObject = item.Settings;
             RefreshButtons();
         }
@@ -121,8 +147,15 @@ namespace ProjectCodeFormat.Controls
             RefreshButtons();
             TreeNode node = projects.SelectedNode;
             string tag = (string)node.Tag;
+            int selectedImageIndex = 0;
             if (tag == "node") properties.SelectedObject = null;
-            else properties.SelectedObject = ((Settings)pluginMain.Settings).Get(node.Name).Settings;
+            else
+            {
+                Item item = ((Settings)pluginMain.Settings).Get(node.Name);
+                properties.SelectedObject = item.Settings;
+                string ext = item.GetExtension();
+                if (projExtToImageIndex.ContainsKey(ext)) selectedImageIndex = projExtToImageIndex[ext];
+            }
             properties.Enabled = tag != "node";
         }
 
